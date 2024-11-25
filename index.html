@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Translator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            margin-top: 50px;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Text Translator</h1>
+        <form id="translate-form">
+            <div class="mb-3">
+                <label for="input_text" class="form-label">Enter Text:</label>
+                <textarea id="input_text" name="input_text" class="form-control" rows="4" placeholder="Type your text here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Translate</button>
+        </form>
+        <div id="result" class="result d-none">
+            <h5>Translated Text:</h5>
+            <p id="translated-text"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("translate-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const inputText = document.getElementById("input_text").value;
+
+            const response = await fetch("/generate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ input_text: inputText })
+            });
+
+            const result = await response.json();
+            document.getElementById("translated-text").textContent = result.output;
+            document.getElementById("result").classList.remove("d-none");
+        });
+    </script>
+</body>
+</html>
